@@ -1,7 +1,7 @@
 const express = require("express");
 const port = process.env.PORT || 5000;
 const path = require("path");
-const app = express();
+const app = require("./io-server.js").app;
 const server = require("./io-server.js").server;
 const io = require("./io-server.js").io;
 
