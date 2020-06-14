@@ -28,7 +28,7 @@ function SaveAsFile(t,f,m) {
 }
 
 const list = document.querySelector("#file-list");
-const socket = io("https://turboshare.herokuapp.com/", { transports: ['websocket'] });
+const socket = io("https://turboshare.herokuapp.com/");
 document.querySelector("#frm").addEventListener("submit", e => {
     e.preventDefault();
     let room = document.querySelector("#room").value;

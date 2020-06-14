@@ -4,14 +4,13 @@ const path = require("path");
 const app = require("./io-server.js").app;
 const server = require("./io-server.js").server;
 const io = require("./io-server.js").io;
-
-app.get("/", (req, res) => {
-    res.redirect("/share");
-});
+const cors = require("cors");
 
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.use("/share", require("./share.js"));
+app.use(cors());
+require("./handle-connection.js");
 
 app.use((error, req, res, next) => {
     res.status(403);
