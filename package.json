@@ -1,0 +1,19 @@
+{
+  "name": "fastshare",
+  "version": "1.0.0",
+  "description": "P2P File Sharing.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mano Sriram",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.1.10",
+    "nodemon": "^2.0.4",
+    "socketio": "^1.0.0"
+  }
+}

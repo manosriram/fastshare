@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<p id="code"></p>
+<form id="frm">
+    <input id="file-input" type="file" multiple />
+    <br>
+    <br>
+    <button type="submit">Send</button>
+</form>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io("http://localhost:5000");
+
+socket.on("code", code => {
+    document.querySelector("#code").innerHTML = `Code: ${code}`;
+});
+
+const inputElement = document.getElementById("file-input");
+const formElement = document.getElementById("frm");
+var fileList = [];
+inputElement.addEventListener("change", e => {
+    fileList = [];
+    for (var t=0;t<inputElement.files.length;++t) {
+        fileList.push(inputElement.files[t]);
+    }
+    console.log(fileList);
+});
+
+formElement.addEventListener("submit", e => {
+    e.preventDefault();
+    socket.emit("handle-files", fileList);
+});
+
+
+
+</script>
+</html>
