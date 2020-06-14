@@ -10,14 +10,17 @@
 <div id="room-code">
     <h1 id="code"></h1>
 </div>
-<form id="frm">
-    <input id="file-input" type="file" multiple />
-    <br>
-    <br>
-    <button type="submit">Send</button>
-</form>
-<div id="filelist"></div>
+<div id="mainDiv">
+    <form id="frm">
+        <input id="file-input" type="file" multiple />
+        <br>
+        <br>
+        <button type="submit">Send</button>
+    </form>
+    <div id="filelist"></div>
+</div>
 </body>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const socket = io("http://localhost:5000");
@@ -33,16 +36,30 @@ const formElement = document.getElementById("frm");
 var fileList = [], fileNameList = [];
 const fileElement = document.querySelector("#filelist");
 
+function removeElement(elementId) {
+    for (let t=0;t<2;++t) {
+        var element = document.getElementById(elementId);
+        element.parentNode.removeChild(element);
+    }
+}
+
 inputElement.addEventListener("change", e => {
     fileList = [];
     for (var t=0;t<inputElement.files.length;++t) {
         fileList.push(inputElement.files[t]);
         fileNameList.push(inputElement.files[t].name);
+
         const btn = document.createElement("button");
-        btn.id = "btn";
+        btn.id = t;
         btn.innerHTML = "Remove";
+        btn.addEventListener("click", e => {
+            removeElement(e.target.id);
+            fileList = fileList.filter((list, id) => id != e.target.id);
+            fileNameList = fileNameList.filter((list, id) => id != e.target.id);
+        });
 
         const name = document.createElement("h2");
+        name.id = t;
         name.innerHTML = inputElement.files[t].name;
         fileElement.appendChild(name);
         fileElement.appendChild(btn);
