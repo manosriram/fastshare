@@ -6,16 +6,55 @@
 </head>
 <body>
 <form id="frm">
-    <input id="file-input" type="file" multiple />
+    <input id="room" type="text" />
     <br>
     <br>
     <button type="submit">Send</button>
 </form>
+    <p id="room-name"></p>
+    <div id="file-list"></div>
 </body>
+<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const socket = io("http://localhost:5000");
 
-socket.on("test", msg => console.log(msg));
+function SaveAsFile(t,f,m) {
+    try {
+        var b = new Blob([t],{type:m});
+        saveAs(b, f);
+    } catch (e) {
+        window.open("data:"+m+"," + encodeURIComponent(t), '_blank','');
+    }
+}
+
+const list = document.querySelector("#file-list");
+const socket = io("http://localhost:5000");
+document.querySelector("#frm").addEventListener("submit", e => {
+    e.preventDefault();
+    let room = document.querySelector("#room").value;
+    socket.emit("join", room);
+});
+
+socket.on("joined", room => {
+    const pl = document.querySelector("#room-name");
+    pl.innerHTML = `Joined room ${room}`;
+});
+
+socket.on("receive", data => {
+    const fileElement = document.querySelector("#file-list");
+    data.map(file => {
+        const node = document.createElement("h3");
+        const link = document.createElement("button");
+        link.innerHTML = "Download";
+        node.innerHTML = file.name;
+        fileElement.appendChild(node);
+        fileElement.appendChild(link);
+        link.onclick = function() {
+            SaveAsFile(file.buffer, file.name, "data:application/zip;base64");
+        }
+    });
+});
+
+// SaveAsFile(file,"arc.zip","data:application/zip;base64");
 </script>
 </html>

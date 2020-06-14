@@ -2,12 +2,20 @@ const io = require("./io-server.js").io;
 const { nanoid } = require("nanoid");
 
 io.on("connection", socket => {
-    const room = nanoid(8);
-    socket.join(room);
+    const roomid = nanoid(8);
 
-    socket.emit("code", room);
+    socket.emit("code", roomid);
 
-    socket.on("handle-files", fileList => {
-        console.log(fileList);
+    socket.on("join", room => {
+        socket.join(room);
+        socket.emit("joined", room);
+    });
+
+    socket.on("handle-files", ({fileList, cod, fileNameList}) => {
+        let data = [];
+        for (let t=0;t<fileNameList.length;++t)
+            data.push({name: fileNameList[t], buffer: fileList[t]});
+
+        socket.to(cod).emit("receive", data);
     });
 });
