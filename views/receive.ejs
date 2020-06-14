@@ -37,7 +37,7 @@ document.querySelector("#frm").addEventListener("submit", e => {
 
 socket.on("joined", room => {
     const pl = document.querySelector("#room-name");
-    pl.innerHTML = `Joined room ${room}`;
+    pl.innerHTML = `Connected!`;
 });
 
 socket.on("receive", data => {

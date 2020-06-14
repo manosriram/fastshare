@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Send Files</title>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<p id="code"></p>
+<div id="room-code">
+    <h1 id="code"></h1>
+</div>
 <form id="frm">
     <input id="file-input" type="file" multiple />
     <br>
     <br>
     <button type="submit">Send</button>
 </form>
+<div id="filelist"></div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -26,13 +31,22 @@ socket.on("code", code => {
 const inputElement = document.getElementById("file-input");
 const formElement = document.getElementById("frm");
 var fileList = [], fileNameList = [];
+const fileElement = document.querySelector("#filelist");
+
 inputElement.addEventListener("change", e => {
     fileList = [];
     for (var t=0;t<inputElement.files.length;++t) {
         fileList.push(inputElement.files[t]);
         fileNameList.push(inputElement.files[t].name);
+        const btn = document.createElement("button");
+        btn.id = "btn";
+        btn.innerHTML = "Remove";
+
+        const name = document.createElement("h2");
+        name.innerHTML = inputElement.files[t].name;
+        fileElement.appendChild(name);
+        fileElement.appendChild(btn);
     }
-    console.log(fileList);
 });
 
 formElement.addEventListener("submit", e => {

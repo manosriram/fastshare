@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Fastshare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
     <div id="send-receive">
-        <a href="/share/send">Send Files</a>
-        <a href="/share/receive">Receive Files</a>
+        <div id="box">
+            <a href="/share/send"><h2>Send <img src="https://img.icons8.com/fluent/25/000000/up.png"/></h2></a>
+        </div>
+        <div id="box">
+        <a href="/share/receive"><h2>Receive <img src="https://img.icons8.com/fluent/25/000000/down.png"/></h2></a>
+        </div>
     </div>
 </body>
     <script src="/socket.io/socket.io.js"></script>
