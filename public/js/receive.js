@@ -9,15 +9,17 @@ function SaveAsFile(t, f, m) {
 }
 
 const list = document.querySelector("#file-list");
-const socket = io("http://localhost:5000/");
+const socket = io("https://turboshare.herokuapp.com/");
 document.querySelector("#frm").addEventListener("submit", e => {
     e.preventDefault();
     let room = document.querySelector("#room").value;
-    socket.emit("join", room);
+    socket.emit("join-rec", room);
 });
 
 socket.on("joined", room => {
-    document.querySelector("#code").innerHTML = `Joined ${room}`;
+    if (room === "Connection not available")
+        document.querySelector("#code").innerHTML = `${room}`;
+    else document.querySelector("#code").innerHTML = `Joined ${room}`;
 });
 
 socket.on("receive", data => {

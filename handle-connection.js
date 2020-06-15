@@ -1,11 +1,22 @@
 const io = require("./io-server.js").io;
 const { nanoid } = require("nanoid");
+let connections = [{}];
 
 io.on("connection", socket => {
     const roomid = nanoid(8);
     socket.emit("code", roomid);
 
+    socket.on("join-rec", room => {
+        if (connections[room]) {
+            socket.join(room);
+            socket.emit("joined", room);
+        } else {
+            socket.emit("joined", "Connection not available");
+        }
+    });
+
     socket.on("join", room => {
+        connections[room] = true;
         socket.join(room);
         socket.emit("joined", room);
     });
@@ -17,4 +28,6 @@ io.on("connection", socket => {
 
         socket.to(cod).emit("receive", data);
     });
+
+    socket.on("disconnect", () => {});
 });
