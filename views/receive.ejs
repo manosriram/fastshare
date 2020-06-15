@@ -2,22 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>FastShare</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
 </head>
 <body>
+<div id="room-code">
+    <h1 id="code">Not Connected.</h1>
+</div>
+<div id="mainDiv">
 <form id="frm">
-    <input id="room" type="text" />
+    <input id="room" type="text" placeholder="Code"/>
     <br>
     <br>
     <button type="submit">Join</button>
+    <button id="dwnall">Download All</button>
 </form>
-    <p id="room-name"></p>
-    <div id="file-list"></div>
+    <div id="filelist"></div>
+</div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.js"></script>
 <script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-
+var zip = new JSZip();
 function SaveAsFile(t,f,m) {
     try {
         var b = new Blob([t],{type:m});
@@ -28,7 +36,7 @@ function SaveAsFile(t,f,m) {
 }
 
 const list = document.querySelector("#file-list");
-const socket = io("https://turboshare.herokuapp.com/");
+const socket = io("http://localhost:5000/");
 document.querySelector("#frm").addEventListener("submit", e => {
     e.preventDefault();
     let room = document.querySelector("#room").value;
@@ -36,13 +44,13 @@ document.querySelector("#frm").addEventListener("submit", e => {
 });
 
 socket.on("joined", room => {
-    const pl = document.querySelector("#room-name");
-    pl.innerHTML = `Connected!`;
+    document.querySelector("#code").innerHTML = `Joined ${room}`;
 });
 
 socket.on("receive", data => {
     const fileElement = document.querySelector("#file-list");
     data.map(file => {
+        zip.file(file.name, file.buffer, { binary: true });
         const node = document.createElement("h3");
         const link = document.createElement("button");
         link.innerHTML = "Download";
@@ -50,9 +58,19 @@ socket.on("receive", data => {
         fileElement.appendChild(node);
         fileElement.appendChild(link);
         link.onclick = function() {
-            SaveAsFile(file.buffer, file.name, "data:application/zip;base64");
+            SaveAsFile(file.buffer, file.name);
         }
     });
 });
+
+const dwnall = document.querySelector("#dwnall");
+dwnall.addEventListener("click", () => {
+    zip.generateAsync({type:"blob"})
+    .then(function(content) {
+        saveAs(content, "Archive.zip");
+    });
+});
+
+
 </script>
 </html>

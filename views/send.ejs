@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Send Files</title>
-    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -23,10 +23,10 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-const socket = io("https://turboshare.herokuapp.com/");
+const socket = io("http://localhost:5000/");
 var cod;
 socket.on("code", code => {
-    document.querySelector("#code").innerHTML = `Code: ${code}`;
+    document.querySelector("#code").innerHTML = `Connect Code: &nbsp; ${code}`;
     cod = code;
     socket.emit("join", code);
 });
@@ -68,7 +68,7 @@ inputElement.addEventListener("change", e => {
 
 formElement.addEventListener("submit", e => {
     e.preventDefault();
-    socket.emit("handle-files", ({ fileList: fileList, cod: cod, fileNameList: fileNameList}));
+    socket.emit("handle-files", ({fileList, cod, fileNameList}));
 });
 </script>
 </html>

@@ -3,7 +3,6 @@ const { nanoid } = require("nanoid");
 
 io.on("connection", socket => {
     const roomid = nanoid(8);
-
     socket.emit("code", roomid);
 
     socket.on("join", room => {
