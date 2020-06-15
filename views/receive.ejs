@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>FastShare</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
 </head>
@@ -24,53 +41,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.js"></script>
 <script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script>
-var zip = new JSZip();
-function SaveAsFile(t,f,m) {
-    try {
-        var b = new Blob([t],{type:m});
-        saveAs(b, f);
-    } catch (e) {
-        window.open("data:"+m+"," + encodeURIComponent(t), '_blank','');
-    }
-}
-
-const list = document.querySelector("#file-list");
-const socket = io("http://localhost:5000/");
-document.querySelector("#frm").addEventListener("submit", e => {
-    e.preventDefault();
-    let room = document.querySelector("#room").value;
-    socket.emit("join", room);
-});
-
-socket.on("joined", room => {
-    document.querySelector("#code").innerHTML = `Joined ${room}`;
-});
-
-socket.on("receive", data => {
-    const fileElement = document.querySelector("#file-list");
-    data.map(file => {
-        zip.file(file.name, file.buffer, { binary: true });
-        const node = document.createElement("h3");
-        const link = document.createElement("button");
-        link.innerHTML = "Download";
-        node.innerHTML = file.name;
-        fileElement.appendChild(node);
-        fileElement.appendChild(link);
-        link.onclick = function() {
-            SaveAsFile(file.buffer, file.name);
-        }
-    });
-});
-
-const dwnall = document.querySelector("#dwnall");
-dwnall.addEventListener("click", () => {
-    zip.generateAsync({type:"blob"})
-    .then(function(content) {
-        saveAs(content, "Archive.zip");
-    });
-});
-
-
-</script>
+<script src="/js/receive.js"></script>
 </html>
